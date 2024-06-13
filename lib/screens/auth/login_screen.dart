@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/app_colors.dart';
 import 'package:uni_assest/consts/my_validators.dart';
 import 'package:uni_assest/root_screen.dart';
@@ -7,8 +8,12 @@ import 'package:uni_assest/screens/auth/register_screen.dart';
 import 'package:uni_assest/screens/auth/signup_or_signin_widget.dart';
 import 'package:uni_assest/screens/auth/txt_formfield_widget.dart';
 import 'package:uni_assest/services/assets_manager.dart';
+import 'package:uni_assest/widgets/custom_list_tile_widget.dart';
 import 'package:uni_assest/widgets/default_material_btn.dart';
+import 'package:uni_assest/widgets/sub_title_text_widget.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
+
+import '../../providers/theme_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,18 +24,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late bool isSecure = true;
   //Controllers
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+
   //Form Key
   late final _formKey = GlobalKey<FormState>();
+
   //Focus Nodes
   late final FocusNode _emailFocusNode;
   late final FocusNode _passwordFocusNode;
 
-  late final FocusNode _drFocusNode;
-  late final FocusNode _tasFocusNode;
-  late final FocusNode _studentFocusNode;
+  late String selectedRole;
+  List<String> listOfRole = ["Professor", "Assistant Professor", "Student"];
 
   @override
   void initState() {
@@ -40,9 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController = TextEditingController();
     _emailFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
-    _drFocusNode = FocusNode();
-    _tasFocusNode = FocusNode();
-    _studentFocusNode = FocusNode();
+
+    selectedRole = "Login as ?";
   }
 
   @override
@@ -53,15 +59,12 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailFocusNode.dispose();
     _passwordController.dispose();
     _passwordFocusNode.dispose();
-
-    _drFocusNode.dispose();
-    _tasFocusNode.dispose();
-    _studentFocusNode.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    JobTitle? selectedOption = JobTitle.Dr;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -94,6 +97,96 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 45.0,
                   ),
+                  ListTile(
+                    contentPadding: const EdgeInsets.all(0),
+                    subtitle: InkWell(
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        showMenu(
+                          color: themeProvider.getIsDarkTheme? AppColors.darkScaffoldColor : AppColors.customGrayColor,
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                              size.width * .30, size.height * .40, 70, 20),
+                          items: [
+                            PopupMenuItem(
+                              value: 1,
+                              child: Text(listOfRole[0],
+                                  style: TextStyle(
+                                      color: themeProvider.getIsDarkTheme
+                                          ? Colors.white
+                                          : null)),
+                              onTap: () {
+                                setState(() {
+                                  selectedRole = listOfRole[0];
+                                });
+                              },
+                            ),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text(listOfRole[1],
+                                  style: TextStyle(
+                                      color: themeProvider.getIsDarkTheme
+                                          ? Colors.white
+                                          : null)),
+                              onTap: () {
+                                setState(() {
+                                  selectedRole = listOfRole[1];
+                                });
+                              },
+                            ),
+                            PopupMenuItem(
+                              value: 3,
+                              child: Text(listOfRole[2],
+                                  style: TextStyle(
+                                      color: themeProvider.getIsDarkTheme
+                                          ? Colors.white
+                                          : null)),
+                              onTap: () {
+                                setState(() {
+                                  selectedRole = listOfRole[2];
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            AssetsManager.login,
+                            height: 35.0,
+                            width: 35.0,
+                          ),
+                          Container(
+                            width: size.width * .8,
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                titleTextWidget(
+                                    txt: selectedRole,
+                                    color: themeProvider.getIsDarkTheme
+                                        ? Colors.white
+                                        : Colors.grey[800]),
+                                Icon(
+                                  size: 27,
+                                  Icons.keyboard_arrow_down_outlined,
+                                  color: themeProvider.getIsDarkTheme
+                                      ? Colors.grey[200]
+                                      : Colors.black,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 24.0,
+                  ),
                   TxtFormFieldWidget(
                     obSecure: false,
                     controller: _emailController,
@@ -113,6 +206,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 24.0,
                   ),
                   TxtFormFieldWidget(
+                    obSecure: isSecure,
+                    isSecureClick: (){
+                      setState(() {
+                        isSecure = !isSecure;
+                      });
+                    },
                     controller: _passwordController,
                     focusNode: _passwordFocusNode,
                     keyboardType: TextInputType.visiblePassword,
@@ -120,85 +219,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       return MyValidators.passwordValidator(value);
                     },
                     onSubmitFct: (value) {
-                      FocusScope.of(context).requestFocus(_passwordFocusNode);
+                      FocusScope.of(context)  .requestFocus(_passwordFocusNode);
                     },
                     label: "Password",
                     hintTxt: "**********",
                     prefixIcon: IconlyLight.lock,
-                    suffixIcon: Icons.remove_red_eye_outlined,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 4,
-                        child: RadioListTile<JobTitle>(
-                          focusNode: _drFocusNode,
-                          hoverColor: AppColors.primaryColor,
-                          activeColor: AppColors.drawerColor,
-                          title: FittedBox(
-                            child: const Text(
-                              'Dr.',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          value: JobTitle.Dr,
-                          groupValue: selectedOption,
-                          onChanged: (JobTitle? value) {
-                            setState(() {
-                              selectedOption = value;
-                              print(selectedOption);
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: RadioListTile<JobTitle>(
-                          focusNode: _tasFocusNode,
-                          hoverColor: AppColors.primaryColor,
-                          value: JobTitle.TAs,
-                          groupValue: selectedOption,
-                          onChanged: (JobTitle? value) {
-                            setState(() {
-                              selectedOption = value;
-                              print("$selectedOption 2");
-                            });
-                          },
-                          title: FittedBox(
-                            child: Text(
-                              'TAs',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: RadioListTile<JobTitle>(
-                          focusNode: _studentFocusNode,
-                          hoverColor: AppColors.primaryColor,
-                          value: JobTitle.student,
-                          groupValue: selectedOption,
-                          onChanged: (JobTitle? value) {
-                            setState(() {
-                              selectedOption = value;
-                              print("$selectedOption 3");
-                            });
-                          },
-                          title: FittedBox(
-                            child: const Text(
-                              'Student',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    suffixIcon: isSecure ? Icons.remove_red_eye_outlined : Icons.visibility_off_outlined,
                   ),
                   const SizedBox(
                     height: 25.0,
@@ -231,9 +257,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   defaultMaterialBtn(
                     onPressed: () {
-                      // if (_formKey.currentState!.validate()) {
+                       if (_formKey.currentState!.validate()) {
                       Navigator.pushNamed(context, RootScreen.routeName);
-                      //}
+                      }
                     },
                     btnWidth: double.infinity,
                     child: titleTextWidget(
@@ -243,16 +269,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 38.0,
                   ),
-                  SignUpOrSignInWidget(
-                    txt: 'Don\'t have an account?',
-                    txtBtn: 'SignUp now',
-                    onPressedFct: () {
-                      Navigator.pushNamed(
-                        context,
-                        RegisterScreen.routeName,
-                      );
-                    },
-                  )
+                  // SignUpOrSignInWidget(
+                  //   txt: 'Don\'t have an account?',
+                  //   txtBtn: 'SignUp now',
+                  //   onPressedFct: () {
+                  //     // Navigator.pushNamed(
+                  //     //   context,
+                  //     //   RegisterScreen.routeName,
+                  //     // );
+                  //   },
+                  // ),
                 ],
               ),
             ),
@@ -262,5 +288,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-enum JobTitle { Dr, TAs, student }

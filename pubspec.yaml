@@ -43,7 +43,8 @@ dependencies:
   flutter_iconly: ^1.0.2
   ionicons: ^0.2.2
   # Scan
-  qr_code_scanner: ^1.0.1
+  #qr_code_scanner: ^1.0.1
+  flutter_barcode_scanner: ^2.0.0
 
 
 dev_dependencies:

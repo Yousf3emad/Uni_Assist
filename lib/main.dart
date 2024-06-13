@@ -25,11 +25,11 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: Styles.themeData(isDarkTheme: themeProvider.getIsDarkTheme, context: context),
-          initialRoute: RegisterScreen.routeName,
+          initialRoute: LoginScreen.routeName,
           routes: {
             RootScreen.routeName: (context) => const RootScreen(),
             LoginScreen.routeName: (context) => const LoginScreen(),
-            RegisterScreen.routeName: (context) => const RegisterScreen(),
+            //RegisterScreen.routeName: (context) => const RegisterScreen(),
             AttendanceScreen.routeName: (context) => AttendanceScreen(),
           },
         );
@@ -37,18 +37,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-/*
-* MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-      ],
-      child: Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: Styles.themeData(
-              isDarkTheme: themeProvider.getIsDarkTheme, context: context),
-          home: ViewAttendance(),
-        );
-      }),
-    );
-* */
+

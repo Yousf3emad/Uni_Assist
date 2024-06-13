@@ -17,6 +17,7 @@ class TxtFormFieldWidget extends StatelessWidget {
     this.preIconColor,
     this.suffixIcon,
     this.obSecure = false,
+    this.isSecureClick,
   });
 
   final TextEditingController controller;
@@ -31,9 +32,10 @@ class TxtFormFieldWidget extends StatelessWidget {
   final Color? preIconColor;
   final IconData? suffixIcon;
   final bool obSecure;
+  final Function? isSecureClick;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return TextFormField(obscuringCharacter: "*",
       obscureText: obSecure,
       controller: controller,
       focusNode: focusNode,
@@ -51,7 +53,12 @@ class TxtFormFieldWidget extends StatelessWidget {
         prefixIcon: Icon(prefixIcon,
           color: preIconColor,
         ),
-        suffixIcon: Icon(suffixIcon),
+        suffixIcon: InkWell(
+          onTap: (){
+            isSecureClick!();
+          },
+            child: Icon(suffixIcon,),
+        ),
       ),
     );
   }
