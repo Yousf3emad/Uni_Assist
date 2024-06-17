@@ -9,7 +9,7 @@
 // import 'package:uni_assest/widgets/title_text_widget.dart';
 //
 // import '../../consts/my_validators.dart';
-// import '../../root_screen.dart';
+// import '../../student_root_screen.dart';
 // import 'signup_or_signin_widget.dart';
 //
 // class RegisterScreen extends StatefulWidget {

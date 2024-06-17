@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:uni_assest/screens/attendance_screen.dart';
-import '../services/assets_manager.dart';
-import '../widgets/custom_list_tile_widget.dart';
-import '../widgets/sub_title_text_widget.dart';
-import '../widgets/title_text_widget.dart';
+import 'package:uni_assest/screens/student/student_attendance_screen.dart';
+import '../../services/assets_manager.dart';
+import '../../widgets/custom_list_tile_widget.dart';
+import '../../widgets/sub_title_text_widget.dart';
+import '../../widgets/title_text_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -74,7 +74,7 @@ class ProfileScreen extends StatelessWidget {
                     imagePath: AssetsManager.attendance,
                     title: "View Attendance",
                     function: () async {
-                      await Navigator.pushNamed(context, AttendanceScreen.routeName);
+                      await Navigator.pushNamed(context, StudentAttendanceScreen.routeName);
                     },
                   ),
                   customListTile(

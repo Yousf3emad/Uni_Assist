@@ -58,8 +58,8 @@ class MyAppMethods {
                       TextButton(
                         onPressed: () {
                           try{
-                            fct();
                             Navigator.pop(context);
+                            fct();
                           }catch(e){
                             print(e.toString());
                           }

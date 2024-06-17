@@ -8,7 +8,6 @@ Widget bottomNavigationBarItem({
     NavigationDestination(
       icon: Icon(
         icon,
-
       ),
       selectedIcon: Icon(
         selectedIcon,

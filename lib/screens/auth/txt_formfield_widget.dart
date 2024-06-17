@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../consts/my_validators.dart';
 
 class TxtFormFieldWidget extends StatelessWidget {
   const TxtFormFieldWidget({
@@ -53,7 +52,7 @@ class TxtFormFieldWidget extends StatelessWidget {
         prefixIcon: Icon(prefixIcon,
           color: preIconColor,
         ),
-        suffixIcon: InkWell(
+        suffixIcon: suffixIcon==null? null : InkWell(
           onTap: (){
             isSecureClick!();
           },

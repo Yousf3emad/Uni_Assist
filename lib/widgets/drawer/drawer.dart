@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/app_colors.dart';
 import 'package:uni_assest/providers/theme_provider.dart';
-import 'package:uni_assest/screens/attendance_screen.dart';
-import '../../screens/auth/login_screen.dart';
 import '../../services/assets_manager.dart';
 import '../../services/my_app_methods.dart';
 import '../custom_list_tile_widget.dart';
@@ -142,8 +140,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 customListTile(
                   imagePath: AssetsManager.privacy,
                   title: "Privacy & Policy",
-                  function: () {
-                  },
+                  function: () {},
                 ),
                 const SizedBox(
                   height: 70.0,
@@ -163,19 +160,17 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    onPressed: (){
-                      Navigator.pushNamed(context, LoginScreen.routeName);
-                      // Warning when the user want to log out
-                      // MyAppMethods.showErrorORWarningDialog(
-                      //   context: context,
-                      //   fct: (){
-                      //     print("object00");
-                      //     Navigator.pushNamed(context, LoginScreen.routeName);
-                      //     print("object00111");
-                      //   },
-                      //   isError: false,
-                      //   subTitle: "Log Out ?",
-                      // );
+                    onPressed: () {
+                      //Warning when the user want to log out
+                      MyAppMethods.showErrorORWarningDialog(
+                        context: context,
+                        fct: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        isError: false,
+                        subTitle: "Log Out ?",
+                      );
                     },
                   ),
                 ),

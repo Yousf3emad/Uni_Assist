@@ -22,6 +22,9 @@ class AssetsManager {
   static String singleLike = "$imagesPath/single_like.jpg";
   static String comment = "$imagesPath/comment.jpg";
 
+  static String gallery = "$imagesPath/gallery.png";
+  static String qrCode = "$imagesPath/qrCode.png";
+
 
 
 

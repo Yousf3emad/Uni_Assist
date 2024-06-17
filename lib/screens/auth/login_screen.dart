@@ -1,19 +1,20 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/app_colors.dart';
 import 'package:uni_assest/consts/my_validators.dart';
-import 'package:uni_assest/root_screen.dart';
-import 'package:uni_assest/screens/auth/register_screen.dart';
-import 'package:uni_assest/screens/auth/signup_or_signin_widget.dart';
 import 'package:uni_assest/screens/auth/txt_formfield_widget.dart';
 import 'package:uni_assest/services/assets_manager.dart';
-import 'package:uni_assest/widgets/custom_list_tile_widget.dart';
 import 'package:uni_assest/widgets/default_material_btn.dart';
 import 'package:uni_assest/widgets/sub_title_text_widget.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
 
 import '../../providers/theme_provider.dart';
+import '../prof_and_assistant_prof/root/root_screen.dart';
+import '../student/root/student_root_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,6 +26,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late bool isSecure = true;
+
   //Controllers
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
@@ -105,18 +107,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       splashColor: Colors.transparent,
                       onTap: () {
                         showMenu(
-                          color: themeProvider.getIsDarkTheme? AppColors.darkScaffoldColor : AppColors.customGrayColor,
+                          color: themeProvider.getIsDarkTheme
+                              ? AppColors.darkScaffoldColor
+                              : AppColors.customGrayColor,
                           context: context,
                           position: RelativeRect.fromLTRB(
-                              size.width * .30, size.height * .40, 70, 20),
+                            size.width * .30,
+                            size.height * .40,
+                            70,
+                            20,
+                          ),
                           items: [
                             PopupMenuItem(
                               value: 1,
-                              child: Text(listOfRole[0],
-                                  style: TextStyle(
-                                      color: themeProvider.getIsDarkTheme
-                                          ? Colors.white
-                                          : null)),
+                              child: Text(
+                                listOfRole[0],
+                                style: TextStyle(
+                                    color: themeProvider.getIsDarkTheme
+                                        ? Colors.white
+                                        : null),
+                              ),
                               onTap: () {
                                 setState(() {
                                   selectedRole = listOfRole[0];
@@ -207,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TxtFormFieldWidget(
                     obSecure: isSecure,
-                    isSecureClick: (){
+                    isSecureClick: () {
                       setState(() {
                         isSecure = !isSecure;
                       });
@@ -219,12 +229,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       return MyValidators.passwordValidator(value);
                     },
                     onSubmitFct: (value) {
-                      FocusScope.of(context)  .requestFocus(_passwordFocusNode);
+                      FocusScope.of(context).requestFocus(_passwordFocusNode);
                     },
                     label: "Password",
                     hintTxt: "**********",
                     prefixIcon: IconlyLight.lock,
-                    suffixIcon: isSecure ? Icons.remove_red_eye_outlined : Icons.visibility_off_outlined,
+                    suffixIcon: isSecure
+                        ? Icons.remove_red_eye_outlined
+                        : Icons.visibility_off_outlined,
                   ),
                   const SizedBox(
                     height: 25.0,
@@ -257,8 +269,46 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   defaultMaterialBtn(
                     onPressed: () {
-                       if (_formKey.currentState!.validate()) {
-                      Navigator.pushNamed(context, RootScreen.routeName);
+                      if (_formKey.currentState!.validate()) {
+                        if (selectedRole == listOfRole[0] ||
+                            selectedRole == listOfRole[1]) {
+                          Navigator.pushNamed(
+                            context,
+                            RootScreen.routeName,
+                          );
+                        } else if (selectedRole == listOfRole[2]) {
+                          Navigator.pushNamed(
+                            context,
+                            StudentRootScreen.routeName,
+                          );
+                        } else {
+                          // showDialog(context: context, builder: (context) => AlertDialog(
+                          //   title: titleTextWidget(txt: "Error"),
+                          //   content: Container(
+                          //     color: Colors.red,
+                          //     height: 100,
+                          //     width: 100,
+                          //   ),
+                          // ),);
+                          showCupertinoModalPopup(
+                            context: context,
+                            builder: (context) => Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(18),
+                                  topRight: Radius.circular(18),
+                                ),
+                              ),
+                              height: 35,
+                              width: size.width * 1,
+                              child: Center(
+                                  child: subTitleTextWidget(
+                                      txt: "Please Choose your role to Login ",
+                                      color: Colors.white)),
+                            ),
+                          );
+                        }
                       }
                     },
                     btnWidth: double.infinity,

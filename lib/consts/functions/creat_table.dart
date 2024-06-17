@@ -4,10 +4,11 @@ import '../app_colors.dart';
 
 Widget createTable({
   required List<String> subjects,
+  required String dataColumnLabel,
 }) {
   List<DataColumn> columns = [
-    DataColumn(
-      label: Text("Subject name"),
+     DataColumn(
+      label: Text(dataColumnLabel),
     )
   ];
 
@@ -24,15 +25,15 @@ Widget createTable({
     cells.add(DataCell(Text(subjects[i]))); // Subject name cell
     for (int j = 0; j < 6; j++) {
       cells.add(DataCell(
-          j % 2 == 0 ? Icon(Icons.check) : Icon(Icons.clear))); // Data cells
+          j % 2 == 0 ? const Icon(Icons.check) : const Icon(Icons.clear))); // Data cells
     }
     rows.add(DataRow(cells: cells));
   }
 
   return DataTable(
       border: TableBorder.symmetric(
-          outside: BorderSide(),
-          inside: BorderSide(color: AppColors.drawerColor)),
+          outside: const BorderSide(),
+          inside: const BorderSide(color: AppColors.drawerColor)),
       columns: columns,
       rows: rows);
 }

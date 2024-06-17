@@ -17,7 +17,6 @@ Widget subTitleTextWidget({
       txt,
       maxLines: maxLines,
       style: TextStyle(
-
         color: color,
         fontSize: fontSize,
         fontWeight: fontWeight,
