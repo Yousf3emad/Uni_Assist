@@ -16,7 +16,7 @@ class PdfsScreenStudentView extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    final String args = ModalRoute.of(context)!.settings.arguments as String;
+    final List<String> args = ModalRoute.of(context)!.settings.arguments as List<String>;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -25,7 +25,7 @@ class PdfsScreenStudentView extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: titleTextWidget(txt: args),
+        title: titleTextWidget(txt: args[0]),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
@@ -73,7 +73,7 @@ class PdfsScreenStudentView extends StatelessWidget {
                             child: subTitleTextWidget(
                               maxLines: 1,
                               overFlow: TextOverflow.ellipsis,
-                              txt: "$args ${index + 1}",
+                              txt: "pdf ${index + 1}",
                               color: themeProvider.getIsDarkTheme
                                   ? Colors.white
                                   : Colors.black,

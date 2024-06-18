@@ -5,10 +5,7 @@ import 'package:uni_assest/services/assets_manager.dart';
 import 'package:uni_assest/widgets/choose_semester_widget.dart';
 import '../../consts/app_colors.dart';
 import '../../widgets/material_widgets/navigation_widget.dart';
-import 'inner_screens/materials_screens/levels/level_four.dart';
 import 'inner_screens/materials_screens/levels/materials_level_student_view.dart';
-import 'inner_screens/materials_screens/levels/level_three.dart';
-import 'inner_screens/materials_screens/levels/level_two.dart';
 
 class StudentMaterialsScreen extends StatelessWidget {
   const StudentMaterialsScreen({super.key});

@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_assest/models/levels_model.dart';
 import 'package:uni_assest/providers/theme_provider.dart';
 import 'package:uni_assest/services/assets_manager.dart';
 import 'package:uni_assest/widgets/choose_semester_widget.dart';
 import '../../consts/app_colors.dart';
 import '../../widgets/material_widgets/navigation_widget.dart';
-import '../student/inner_screens/materials_screens/levels/level_four.dart';
-import '../student/inner_screens/materials_screens/levels/materials_level_student_view.dart';
-import '../student/inner_screens/materials_screens/levels/level_three.dart';
-import '../student/inner_screens/materials_screens/levels/level_two.dart';
 import 'inner_screens/materials_screen/materials_level.dart';
 
 class MaterialsScreen extends StatelessWidget {

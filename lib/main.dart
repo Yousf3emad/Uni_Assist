@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: Styles.themeData(
-              isDarkTheme: themeProvider.getIsDarkTheme, context: context),
+              isDarkTheme: themeProvider.getIsDarkTheme, context: context,),
           initialRoute: LoginScreen.routeName,
           routes: {
             LoginScreen.routeName: (context) => const LoginScreen(),
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
             //LevelThreeScreen.routeName: (context) => LevelThreeScreen(),
             //LevelFourScreen.routeName: (context) => LevelFourScreen(),
             PdfsScreenStudentView.routeName: (context) => const PdfsScreenStudentView(),
-            PdfsScreen.routeName: (context) => PdfsScreen(),
+            PdfsScreen.routeName: (context) => const PdfsScreen(),
             //SectionsScreen.routeName: (context) => const SectionsScreen(),
           },
         );

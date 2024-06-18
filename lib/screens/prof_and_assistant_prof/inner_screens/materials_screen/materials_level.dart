@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/screens/prof_and_assistant_prof/inner_screens/materials_screen/pdfs_screen.dart';
 import 'package:uni_assest/widgets/material_widgets/folder_widget.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
 
 import '../../../../../providers/theme_provider.dart';
-import '../../../../consts/app_colors.dart';
-import '../../../../widgets/default_material_btn.dart';
-import '../../../../widgets/sub_title_text_widget.dart';
-import '../../../auth/txt_formfield_widget.dart';
 
 class MaterialsLevelScreen extends StatelessWidget {
   MaterialsLevelScreen({super.key});

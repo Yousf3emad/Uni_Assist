@@ -9,7 +9,7 @@ import '../../../../widgets/title_text_widget.dart';
 import '../../../auth/txt_formfield_widget.dart';
 
 class PdfsScreen extends StatefulWidget {
-   PdfsScreen({super.key});
+   const PdfsScreen({super.key});
 
   static const String routeName = "PdfsScreen";
 
