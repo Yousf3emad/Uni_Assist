@@ -12,8 +12,7 @@ class QRCodeScanner {
       );
       debugPrint("Data is: $data");
     } catch (e) {
-      debugPrint("Error is : ${e.toString()}");
-
+      debugPrint("Error is : ${e.toString()}",);
     }
   }
 }

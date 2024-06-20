@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/app_colors.dart';
 import 'package:uni_assest/services/assets_manager.dart';
+import 'package:uni_assest/shared/local/qr_generate/handle.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
 
 import '../../providers/theme_provider.dart';
@@ -39,7 +40,20 @@ class GenerateQrCodeScreen extends StatelessWidget {
                     ? AppColors.darkScaffoldColor
                     : AppColors.primaryColor,
               ),
-              onPressed: () {},
+              onPressed: () async {
+                var result = await ApiService.generateQrcode({
+                  "type": "no",
+                  "sectionNo": "3",
+                  "subjectName": "HCI",
+                  "week": "3",
+                  "group": "GroupC",
+                  "department": "CS",
+                  "location": "Hall 3",
+                  "lecturerName": "wafaa"
+
+                });
+                print(result);
+              },
               child: titleTextWidget(txt: "Generate Qr Code"),
             ),
           ),

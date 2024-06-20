@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/app_colors.dart';
+import 'package:uni_assest/consts/end_points.dart';
 import 'package:uni_assest/consts/my_validators.dart';
 import 'package:uni_assest/screens/auth/txt_formfield_widget.dart';
 import 'package:uni_assest/services/assets_manager.dart';
+import 'package:uni_assest/shared/local/cashe/login_status.dart';
+import 'package:uni_assest/shared/remote/api_manager.dart';
 import 'package:uni_assest/widgets/default_material_btn.dart';
 import 'package:uni_assest/widgets/sub_title_text_widget.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
@@ -23,14 +26,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late bool isSecure = true;
+  bool isSecure = true;
 
   //Controllers
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
   //Form Key
-  late final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   //Focus Nodes
   late final FocusNode _emailFocusNode;
@@ -226,9 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     validateFct: (value) {
                       return MyValidators.passwordValidator(value);
                     },
-                    onSubmitFct: (value) {
-                      FocusScope.of(context).requestFocus(_passwordFocusNode);
-                    },
+                    onSubmitFct: (value) {},
                     label: "Password",
                     hintTxt: "**********",
                     prefixIcon: IconlyLight.lock,
@@ -266,28 +267,94 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 35.0,
                   ),
                   defaultMaterialBtn(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         if (selectedRole == listOfRole[0] ||
                             selectedRole == listOfRole[1]) {
-                          Navigator.pushNamed(
-                            context,
-                            RootScreen.routeName,
+                          var result = await ApiManager.studentLogin(
+                            PROF_OR_ASSIST_LOGIN,
+                            {
+                              "email": _emailController.text.toString(),
+                              "password": _passwordController.text.toString(),
+                            },
                           );
+                          if (result["status"] == "Success") {
+                            print(result["token"]);
+                            print(result["profOrProfAssist"]["role"]);
+                            LoginStatus.saveLoginStatus(
+                              token: result["token"],
+                              role: result["profOrProfAssist"]["role"],
+                            ).then((value) {
+                              Navigator.pushNamed(
+                                context,
+                                RootScreen.routeName,
+                              );
+                            });
+                          } else {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (context) => Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(18),
+                                    topRight: Radius.circular(18),
+                                  ),
+                                ),
+                                height: 35,
+                                width: size.width * 1,
+                                child: Center(
+                                  child: subTitleTextWidget(
+                                      txt: "This email not found",
+                                      color: Colors.white),
+                                ),
+                              ),
+                            );
+                          }
                         } else if (selectedRole == listOfRole[2]) {
-                          Navigator.pushNamed(
-                            context,
-                            StudentRootScreen.routeName,
+                          var result = await ApiManager.studentLogin(
+                            STUDENT_LOGIN,
+                            {
+                              "email": _emailController.text.toString(),
+                              "password": _passwordController.text.toString(),
+                              "level": "4"
+                            },
                           );
+                          if (result["status"] == "Success") {
+                            print(result["token"]);
+                            print(result["studentEmail"]["role"]);
+                            LoginStatus.saveLoginStatus(
+                              token: result["token"],
+                              role: result["studentEmail"]["role"],
+                            ).then((value) {
+                              Navigator.pushNamed(
+                                context,
+                                StudentRootScreen.routeName,
+                              );
+                            });
+                          } else {
+                            showCupertinoModalPopup(
+                              context: context,
+                              builder: (context) => Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(18),
+                                    topRight: Radius.circular(18),
+                                  ),
+                                ),
+                                height: 35,
+                                width: size.width * 1,
+                                child: Center(
+                                  child: subTitleTextWidget(
+                                    txt: "This student email not found",
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
                         } else {
-                          // showDialog(context: context, builder: (context) => AlertDialog(
-                          //   title: titleTextWidget(txt: "Error"),
-                          //   content: Container(
-                          //     color: Colors.red,
-                          //     height: 100,
-                          //     width: 100,
-                          //   ),
-                          // ),);
                           showCupertinoModalPopup(
                             context: context,
                             builder: (context) => Container(

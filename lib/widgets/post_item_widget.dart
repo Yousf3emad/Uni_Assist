@@ -1,32 +1,55 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:uni_assest/consts/app_colors.dart';
+import 'package:flutter/widgets.dart';
+import 'package:uni_assest/widgets/post_interaction_btn.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
 
-import 'post_interaction_btn.dart';
+import '../consts/app_colors.dart';
 
-class PostItem extends StatelessWidget {
-  const PostItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
+Widget postItem({
+  required BuildContext context,
+  required String owner,
+  required String date,
+  required String description,
+  required likesNumber,
+  required commentsNumber,
+}) =>
+    Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Icon(Icons.account_circle_sharp,color: Colors.grey,size: 50.0,),
-            const SizedBox(width: 10.0,),
+            const Icon(
+              Icons.account_circle_sharp,
+              color: Colors.grey,
+              size: 50.0,
+            ),
+            const SizedBox(
+              width: 10.0,
+            ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                titleTextWidget(txt: "Owner"),
+                titleTextWidget(txt: owner),
                 Row(
                   children: [
-                    Text('3h',style: TextStyle(
-                        fontSize: 12.0,fontWeight: FontWeight.w600,color: Colors.grey[700]
-                    ),),
-                    const SizedBox(width: 2,),
-                    const Icon(Icons.public,size: 15.0,)
+                    Text(
+                      date,
+                      style: TextStyle(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700]),
+                    ),
+                    const SizedBox(
+                      width: 2,
+                    ),
+                    const Icon(
+                      Icons.public,
+                      size: 15.0,
+                    )
                   ],
                 ),
               ],
@@ -34,41 +57,44 @@ class PostItem extends StatelessWidget {
           ],
         ),
         Container(
-          margin: const EdgeInsets.only(top: 12.0,bottom: 10.0),
+          margin: const EdgeInsets.only(top: 12.0, bottom: 10.0),
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: const Text("My post",style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 22.0
-          ),),
+          child: Text(
+            description,
+            style:
+                const TextStyle(fontWeight: FontWeight.w500, fontSize: 22.0),
+          ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0,),
+          padding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+          ),
           child: Row(
             children: [
               postInteractionBtn(
-                context: context,
-                txt: "Like",
-                txtColor: Colors.blueAccent,
-                icon: Icons.favorite_border_outlined,
-                iconColor: Colors.redAccent
-              ),
-              const Text('100'),
+                  context: context,
+                  txt: "Like",
+                  txtColor: Colors.blueAccent,
+                  icon: Icons.favorite_border_outlined,
+                  iconColor: Colors.redAccent),
+              Text(likesNumber),
               const Spacer(),
               postInteractionBtn(
-                context: context,
-                txt: "Comment",
-                icon: Icons.comment,
-                iconColor: Colors.grey,
-                txtColor: Colors.grey
-              ),
-              const Text("100"),
-              const SizedBox(width: 12,)
-
-            ],),
+                  context: context,
+                  txt: "Comment",
+                  icon: Icons.comment,
+                  iconColor: Colors.grey,
+                  txtColor: Colors.grey),
+              Text(commentsNumber),
+              const SizedBox(
+                width: 12,
+              )
+            ],
+          ),
         ),
-        Container(height: 0.5,color: AppColors.customGrayColor,),
-
+        Container(
+          height: 0.5,
+          color: AppColors.customGrayColor,
+        ),
       ],
     );
-  }
-}

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/app_colors.dart';
 import 'package:uni_assest/providers/theme_provider.dart';
+import 'package:uni_assest/screens/auth/login_screen.dart';
+import 'package:uni_assest/shared/local/cashe/login_status.dart';
 import '../../services/assets_manager.dart';
 import '../../services/my_app_methods.dart';
 import '../custom_list_tile_widget.dart';
@@ -165,8 +167,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       MyAppMethods.showErrorORWarningDialog(
                         context: context,
                         fct: () {
+                          LoginStatus.logout();
                           Navigator.pop(context);
-                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                            (Route<dynamic> route) =>
+                                false, // Removes all previous routes
+                          );
                         },
                         isError: false,
                         subTitle: "Log Out ?",

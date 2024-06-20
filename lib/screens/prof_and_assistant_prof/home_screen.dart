@@ -1,68 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_assest/consts/end_points.dart';
+import 'package:uni_assest/models/post/add_post_model.dart';
 import 'package:uni_assest/services/assets_manager.dart';
+import 'package:uni_assest/shared/remote/api_manager.dart';
 import 'package:uni_assest/widgets/sub_title_text_widget.dart';
 
 import '../../consts/app_colors.dart';
+import '../../models/post/get_post_model.dart';
 import '../../providers/theme_provider.dart';
+import '../../widgets/default_material_btn.dart';
 import '../../widgets/post_item_widget.dart';
 import '../../widgets/title_text_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<GetPostModel>> futurePosts;
+  final ApiManager apiManager = ApiManager(baseUrl: BASE_URL);
+
+  late final TextEditingController titleController;
+  late final TextEditingController descriptionController;
+
+  //Form Key
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController();
+    descriptionController = TextEditingController();
+
+    futurePosts = apiManager.getPosts(endPoint: PROF_OR_ASSIST_GetPost);
+  }
+
+  // @override
+  // void dispose() {
+  //   titleController.dispose();
+  //   descriptionController.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              // FittedBox(
-              //   child: Row(
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: [
-              //       Container(
-              //         width: size.width * 0.8,
-              //         padding: const EdgeInsets.symmetric(
-              //             vertical: 12.0, horizontal: 18.0),
-              //         height: 50.0,
-              //         decoration: BoxDecoration(
-              //           border: Border.all(color: Colors.blueAccent),
-              //           borderRadius: BorderRadius.circular(50.0),
-              //         ),
-              //         child: subTitleTextWidget(txt: "Write a Post..."),
-              //       ),
-              //       const SizedBox(
-              //         width: 8.0,
-              //       ),
-              //       IconButton(
-              //         onPressed: () {},
-              //         icon: const Icon(Icons.image_outlined,
-              //             color: Colors.green, size: 35.0),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // const SizedBox(
-              //   height: 15.0,
-              // ),
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) => const PostItem(),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 20.0,
+      body: FutureBuilder<List<GetPostModel>>(
+        future: futurePosts,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No posts available'));
+          } else {
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    ListView.separated(
+                      reverse: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final post = snapshot.data![index];
+                        //final date = post.publisher?.createdAt.split('T')[0];
+                        final date = post.generatedAt.split(',')[0];
+                        return postItem(
+                          context: context,
+                          owner: post.publisher?.name ?? "Owner",
+                          date: date ?? "",
+                          description: post.description ?? "",
+                          likesNumber: "${post.likes.length}",
+                          commentsNumber: "${post.comments.length}",
+                        );
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 20.0,
+                      ),
+                      itemCount: snapshot.data!.length,
+                    ),
+                  ],
                 ),
-                itemCount: 30,
               ),
-            ],
-          ),
-        ),
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         isExtended: true,
@@ -71,58 +103,146 @@ class HomeScreen extends StatelessWidget {
             context: context,
             builder: (context) => Container(
               padding: const EdgeInsets.all(12.0),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 9, top: 2.0),
-                    width: 140,
-                    height: 9,
-                    decoration: BoxDecoration(
-                      color: themeProvider.getIsDarkTheme
-                          ? AppColors.drawerColor
-                          : Colors.grey.shade400,
-                      borderRadius: BorderRadius.circular(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 9, top: 2.0),
+                      width: 140,
+                      height: 9,
+                      decoration: BoxDecoration(
+                        color: themeProvider.getIsDarkTheme
+                            ? AppColors.drawerColor
+                            : Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
-                  ),
-                  titleTextWidget(
-                    txt: "Add new Post",
-                    color: themeProvider.getIsDarkTheme ? Colors.white : null,
-                  ),
-                  const SizedBox(
-                    height: 32,
-                  ),
-                  TextField(
-                    //controller: ,
-                    onTap: () {},
-                    maxLines: 4,
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
-                      hintText: "Write here..",
+                    titleTextWidget(
+                      txt: "Add new Post",
+                      color: themeProvider.getIsDarkTheme ? Colors.white : null,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 12.0,
-                  ),
-                  Image.asset(
-                    AssetsManager.gallery,
-                    width: size.height * .3,
-                    height: size.height * .2,
-                    fit: BoxFit.contain,
-                  ),
-                  const SizedBox(height: 6,),
-                  subTitleTextWidget(txt: "tap to drag a photo"),
-                ],
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    // TextFormField(
+                    //   controller: titleController,
+                    //   validator: (value) {
+                    //     if (value!.isEmpty) {
+                    //       return 'Please enter a title';
+                    //     }
+                    //     if (value.length < 6) {
+                    //       return 'title is too short';
+                    //     }
+                    //     return null;
+                    //   },
+                    //   keyboardType: TextInputType.text,
+                    //   decoration: const InputDecoration(
+                    //     hintText: "title",
+                    //   ),
+                    // ),
+                    const SizedBox(
+                      height: 6.0,
+                    ),
+                    TextFormField(
+                      controller: descriptionController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter a description';
+                        }
+                        if (value.length < 200) {
+                          return 'description length must be at least 200 characters long';
+                        }
+                        return null;
+                      },
+                      maxLines: 9,
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(
+                        hintText: "Write a description..",
+                      ),
+                    ),
+                    // SizedBox(
+                    //   height: 120,
+                    //   child: Stack(
+                    //     alignment: Alignment.center,
+                    //     children: [
+                    //       Image.asset(
+                    //         color: AppColors.customGrayColor,
+                    //         AssetsManager.gallery,
+                    //         width: size.height * .3,
+                    //         height: size.height * .2,
+                    //         fit: BoxFit.contain,
+                    //       ),
+                    //       const SizedBox(
+                    //         height: 6,
+                    //       ),
+                    //       subTitleTextWidget(
+                    //         txt: "tap to drag a photo",
+                    //         fontSize: 24,
+                    //         fontWeight: FontWeight.w400,
+                    //       ),
+                    //     ],
+                    //   ),
+                    //),
+                    SizedBox(
+                      height: 12.0,
+                    ),
+                    Spacer(),
+                    defaultMaterialBtn(
+                      btnColor: AppColors.drawerColor,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _addPost(
+                              //title: titleController.text.toString(),
+                              description:
+                                  descriptionController.text.toString());
+                          setState(() {});
+                          Navigator.pop(context);
+                        }
+                      },
+                      btnWidth: double.infinity,
+                      child: titleTextWidget(
+                        color: Colors.white,
+                        txt: "Add Post ",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 24.0,
+                    )
+                  ],
+                ),
               ),
             ),
           );
         },
         backgroundColor: AppColors.drawerColor,
         child: Icon(
-          color: themeProvider.getIsDarkTheme? Colors.white : Colors.black,
+          color: themeProvider.getIsDarkTheme ? Colors.white : Colors.black,
           Icons.add,
           size: 35,
         ),
       ),
     );
+  }
+
+  Future<void> _addPost({
+    required String description,
+    //required String title,
+  }) async {
+    final newPost = AddPostModel(
+      description: description,
+      //publisher: '6669c8bd9f2605aa7f6f1fc6',
+      // Replace with actual publisher ID
+      //
+      // This will be populated by the server
+      //version: 0,
+      title: "title", // This will be populated by the server
+    );
+
+    try {
+      final addedPost = await apiManager.addPost(newPost);
+    } catch (e) {
+      print('Failed to add post: $e');
+    }
   }
 }

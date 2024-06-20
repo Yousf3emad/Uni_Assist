@@ -9,6 +9,7 @@ import 'package:uni_assest/screens/prof_and_assistant_prof/root/root_screen.dart
 import 'package:uni_assest/screens/student/inner_screens/materials_screens/pdfs_screen_student_view.dart';
 import 'package:uni_assest/screens/student/inner_screens/materials_screens/levels/materials_level_student_view.dart';
 import 'package:uni_assest/screens/student/root/student_root_screen.dart';
+import 'package:uni_assest/shared/local/cashe/login_status.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,18 +28,50 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: Styles.themeData(
-              isDarkTheme: themeProvider.getIsDarkTheme, context: context,),
-          initialRoute: LoginScreen.routeName,
+            isDarkTheme: themeProvider.getIsDarkTheme,
+            context: context,
+          ),
+          home: FutureBuilder<bool>(
+            future: LoginStatus.isLoggedIn(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasData && snapshot.data == true) {
+                return FutureBuilder<String>(
+                  future: LoginStatus.getRole(),
+                  builder: (context, roleSnapshot) {
+                    if (roleSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (roleSnapshot.hasData) {
+                      if (roleSnapshot.data == 'student') {
+                        return StudentRootScreen(); // Redirect to student screen if role is student
+                      } else {
+                        return RootScreen(); // Redirect to other screen if role is not student
+                      }
+                    } else {
+                      return LoginScreen(); // In case of error or no data
+                    }
+                  },
+                );
+              } else {
+                return LoginScreen(); // Redirect to login screen if not logged in
+              }
+            },
+          ),
+          //initialRoute: LoginStatus.isLoggedIn()? LoginScreen.routeName,
           routes: {
             LoginScreen.routeName: (context) => const LoginScreen(),
             StudentRootScreen.routeName: (context) => const StudentRootScreen(),
             RootScreen.routeName: (context) => const RootScreen(),
-            MaterialsLevelStudentViewScreen.routeName: (context) => MaterialsLevelStudentViewScreen(),
+            MaterialsLevelStudentViewScreen.routeName: (context) =>
+                MaterialsLevelStudentViewScreen(),
             MaterialsLevelScreen.routeName: (context) => MaterialsLevelScreen(),
             //LevelTwoScreen.routeName: (context) => LevelTwoScreen(),
             //LevelThreeScreen.routeName: (context) => LevelThreeScreen(),
             //LevelFourScreen.routeName: (context) => LevelFourScreen(),
-            PdfsScreenStudentView.routeName: (context) => const PdfsScreenStudentView(),
+            PdfsScreenStudentView.routeName: (context) =>
+                const PdfsScreenStudentView(),
             PdfsScreen.routeName: (context) => const PdfsScreen(),
             //SectionsScreen.routeName: (context) => const SectionsScreen(),
           },

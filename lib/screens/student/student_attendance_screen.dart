@@ -8,7 +8,15 @@ class StudentAttendanceScreen extends StatelessWidget {
 
   static String routeName = "StudentAttendanceScreen";
 
-  final List<String> subject = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  final List<String> subject = [
+    "HCI",
+    "CV",
+    "Iot",
+    "Machine Learning",
+    "Image Processing",
+    "Compilers",
+    "Computer Architecture",
+  ];
 
   @override
   Widget build(BuildContext context) {

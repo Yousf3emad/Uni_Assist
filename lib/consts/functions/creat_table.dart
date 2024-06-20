@@ -7,7 +7,7 @@ Widget createTable({
   required String dataColumnLabel,
 }) {
   List<DataColumn> columns = [
-     DataColumn(
+    DataColumn(
       label: Text(dataColumnLabel),
     )
   ];
@@ -16,7 +16,11 @@ Widget createTable({
 
   // Adding columns
   for (int i = 0; i < 6; i++) {
-    columns.add(DataColumn(label: Text("${i + 1}")));
+    columns.add(
+      DataColumn(
+        label: Text("${i + 1}"),
+      ),
+    );
   }
 
   // Adding rows
@@ -24,8 +28,9 @@ Widget createTable({
     List<DataCell> cells = [];
     cells.add(DataCell(Text(subjects[i]))); // Subject name cell
     for (int j = 0; j < 6; j++) {
-      cells.add(DataCell(
-          j % 2 == 0 ? const Icon(Icons.check) : const Icon(Icons.clear))); // Data cells
+      cells.add(DataCell(j % 2 == 0
+          ? const Icon(Icons.check)
+          : const Icon(Icons.clear))); // Data cells
     }
     rows.add(DataRow(cells: cells));
   }

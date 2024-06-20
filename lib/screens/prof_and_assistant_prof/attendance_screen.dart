@@ -42,7 +42,8 @@ class AttendanceScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             child: createTable(
-                dataColumnLabel: "Student Name", subjects: studentsNames),
+                dataColumnLabel: "Student Name", subjects: studentsNames,
+            ),
           ),
         ],
       ),
