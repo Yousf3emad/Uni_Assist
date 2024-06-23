@@ -166,16 +166,19 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       //Warning when the user want to log out
                       MyAppMethods.showErrorORWarningDialog(
                         context: context,
-                        fct: () {
+                        fctConfirmation: () {
                           LoginStatus.logout();
                           Navigator.pop(context);
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
+                                builder: (context) => const LoginScreen()),
                             (Route<dynamic> route) =>
                                 false, // Removes all previous routes
                           );
+                        },
+                        fctCancel: (){
+                          Navigator.pop(context);
                         },
                         isError: false,
                         subTitle: "Log Out ?",

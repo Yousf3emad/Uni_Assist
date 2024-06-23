@@ -1,8 +1,5 @@
-import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:uni_assest/widgets/post_interaction_btn.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
 

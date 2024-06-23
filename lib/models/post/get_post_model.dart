@@ -1,10 +1,9 @@
-import 'dart:convert';
 
 class GetPostModel {
   final String id;
   final String? title;
   final String? description;
-  final Publisher? publisher;
+  final Publisher? publisher; // Make Publisher nullable
   final List<dynamic> likes;
   final List<dynamic> comments;
   final int version;
@@ -24,9 +23,11 @@ class GetPostModel {
   factory GetPostModel.fromJson(Map<String, dynamic> json) {
     return GetPostModel(
       id: json['_id'] ?? '',
-      title: json['title'],
-      description: json['description'],
-      publisher: json['publisher'] != null ? Publisher.fromJson(json['publisher']) : null,
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      publisher: json['publisher'] != null && json['publisher']!.isNotEmpty
+          ? Publisher.fromJson(json['publisher'])
+          : null, // Handle empty publisher
       likes: List<dynamic>.from(json['likes'] ?? []),
       comments: List<dynamic>.from(json['comments'] ?? []),
       version: json['__v'] ?? 0,
@@ -36,52 +37,18 @@ class GetPostModel {
 }
 
 class Publisher {
-  final String id;
+  //final String id;
   final String name;
 
   Publisher({
-    required this.id,
+    //required this.id,
     required this.name,
   });
 
   factory Publisher.fromJson(Map<String, dynamic> json) {
     return Publisher(
-      id: json['_id'] ?? '',
+      //id: json['_id'] ?? '',
       name: json['name'] ?? '',
-    );
-  }
-}
-
-class Photo {
-  final String url;
-  final dynamic publicId;
-
-  Photo({
-    required this.url,
-    this.publicId,
-  });
-
-  factory Photo.fromJson(Map<String, dynamic> json) {
-    return Photo(
-      url: json['url'] ?? '',
-      publicId: json['publicId'],
-    );
-  }
-}
-
-class ProfilePhoto {
-  final String url;
-  final dynamic publicId;
-
-  ProfilePhoto({
-    required this.url,
-    this.publicId,
-  });
-
-  factory ProfilePhoto.fromJson(Map<String, dynamic> json) {
-    return ProfilePhoto(
-      url: json['url'] ?? '',
-      publicId: json['publicId'],
     );
   }
 }

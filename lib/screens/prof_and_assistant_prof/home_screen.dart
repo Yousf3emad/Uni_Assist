@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/end_points.dart';
 import 'package:uni_assest/models/post/add_post_model.dart';
-import 'package:uni_assest/services/assets_manager.dart';
 import 'package:uni_assest/shared/remote/api_manager.dart';
-import 'package:uni_assest/widgets/sub_title_text_widget.dart';
 
 import '../../consts/app_colors.dart';
 import '../../models/post/get_post_model.dart';
@@ -34,17 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController();
+    //titleController = TextEditingController();
     descriptionController = TextEditingController();
 
     futurePosts = apiManager.getPosts(endPoint: PROF_OR_ASSIST_GetPost);
   }
 
-  // @override
-  // void dispose() {
-  //   titleController.dispose();
-  //   descriptionController.dispose();
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+    //titleController.dispose();
+    descriptionController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
         future: futurePosts,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: AppColors.drawerColor,));
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: titleTextWidget(txt:  "No Posts Yet",));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No posts available'));
           } else {
@@ -155,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                         return null;
                       },
-                      maxLines: 9,
+                      maxLines: 8,
                       keyboardType: TextInputType.text,
                       decoration: const InputDecoration(
                         hintText: "Write a description..",
@@ -184,19 +182,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     //     ],
                     //   ),
                     //),
-                    SizedBox(
+                    const SizedBox(
                       height: 12.0,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     defaultMaterialBtn(
                       btnColor: AppColors.drawerColor,
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          _addPost(
-                              //title: titleController.text.toString(),
+                          await _addPost(
                               description:
                                   descriptionController.text.toString());
-                          setState(() {});
+                          setState(() {
+                            futurePosts = apiManager.getPosts(
+                                endPoint: PROF_OR_ASSIST_GetPost);
+                          });
                           Navigator.pop(context);
                         }
                       },
@@ -206,9 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         txt: "Add Post ",
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 24.0,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         backgroundColor: AppColors.drawerColor,
         child: Icon(
-          color: themeProvider.getIsDarkTheme ? Colors.white : Colors.black,
+          color: themeProvider.getIsDarkTheme ? Colors.white : Colors.white,
           Icons.add,
           size: 35,
         ),
@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //
       // This will be populated by the server
       //version: 0,
-      title: "title", // This will be populated by the server
+      title: "title",
     );
 
     try {

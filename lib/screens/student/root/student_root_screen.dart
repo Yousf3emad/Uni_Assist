@@ -28,7 +28,7 @@ class _StudentRootScreenState extends State<StudentRootScreen> {
   final List<Widget> _screens = [
     const StudentHomeScreen(),
     const StudentScanScreen(),
-    StudentAttendanceScreen(),
+    const StudentAttendanceScreen(),
     const StudentMaterialsScreen(),
   ];
   final List<String> titles = [

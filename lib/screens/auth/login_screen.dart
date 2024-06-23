@@ -281,9 +281,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (result["status"] == "Success") {
                             print(result["token"]);
                             print(result["profOrProfAssist"]["role"]);
+                            print(result["profOrProfAssist"]["subject"]);
+
+                            List<dynamic> dynamicListSubjects = result["profOrProfAssist"]["subject"];
+                            List<String> listSubjects = dynamicListSubjects.map((subject) => subject.toString()).toList();
+
+                            print("ListSubjects => $listSubjects");
+
                             LoginStatus.saveLoginStatus(
                               token: result["token"],
                               role: result["profOrProfAssist"]["role"],
+                              subjects: listSubjects,
                             ).then((value) {
                               Navigator.pushNamed(
                                 context,

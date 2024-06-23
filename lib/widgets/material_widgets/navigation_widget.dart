@@ -7,11 +7,8 @@ import '../../providers/theme_provider.dart';
 
 Widget navigationWidget({
   required BuildContext context,
-  //required Color backGroundColor,
   required String img,
   required String title,
-  //Color titleColor = Colors.black,
-  //Color iconColor = Colors.black,
 }) {
   final themeProvider = Provider.of<ThemeProvider>(context);
   return Container(
