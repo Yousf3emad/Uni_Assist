@@ -18,6 +18,26 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+  late Future<String?> name;
+  late Future<String?> email;
+
+  @override
+  void initState() {
+    super.initState();
+    name = getName();
+    email = getEmail();
+  }
+
+  Future<String?> getName() async {
+    final prefs = await LoginStatus.getName();
+    return prefs;
+  }
+
+  Future<String?> getEmail() async {
+    final prefs = await LoginStatus.getEmail();
+    return prefs;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -66,14 +86,48 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            titleTextWidget(
-                                txt: "Youssef Emad", color: Colors.white),
-                            const SizedBox(
-                              height: 6.0,
+                            FutureBuilder<String?>(
+                              future: name,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return Text('No name found');
+                                }
+                                return subTitleTextWidget(
+                                  txt: snapshot.data!,
+                                  color: Colors.white,
+                                  isOverflow: true,
+                                  overFlow: TextOverflow.ellipsis,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                );
+                              },
                             ),
-                            subTitleTextWidget(
-                                txt: "youssef20024@fci.bu.edu.eg",
-                                color: Colors.white70),
+                            const SizedBox(height: 6.0),
+                            FutureBuilder<String?>(
+                              future: email,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return Text('No email found');
+                                }
+
+                                return subTitleTextWidget(
+                                  txt: snapshot.data!,
+                                  color: Colors.white70,
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ],
@@ -177,7 +231,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                 false, // Removes all previous routes
                           );
                         },
-                        fctCancel: (){
+                        fctCancel: () {
                           Navigator.pop(context);
                         },
                         isError: false,

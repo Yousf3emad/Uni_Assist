@@ -341,7 +341,8 @@ class ApiManager {
     }
   }
 
-  static Future<List<StudentViewAllSubjectModel>> fetchSubjects() async {
+  static Future<List<StudentViewAllSubjectModel>> fetchSubjects(
+      {String? tok}) async {
     final token = await LoginStatus.getToken();
 
     if (token == null) {
@@ -357,7 +358,9 @@ class ApiManager {
     while (attempt < maxAttempts) {
       try {
         final response = await http.get(url, headers: {
-          'token': token, // Add authorization header
+          'token': tok == null
+              ? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzYzYzQ3NzE0M2EwYjljZDkwOWE4MyIsImlzQWRtaW4iOmZhbHNlLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTcxOTExMzc2Nn0.BPE5iuCUaS1oJp-EK0ayzqnH4a3KF5dg8lJmcL9Zy4U'
+              : token, // Add authorization header
         });
 
         if (response.statusCode == 200) {
@@ -396,7 +399,8 @@ class ApiManager {
     throw Exception('Failed to fetch subjects after $maxAttempts attempts');
   }
 
-  static Future<LectureResponse> fetchLectures({required String lectureId}) async {
+  static Future<LectureResponse> fetchLectures(
+      {required String lectureId, String? tok}) async {
     final token = await LoginStatus.getToken();
 
     if (token == null) {
@@ -404,10 +408,11 @@ class ApiManager {
     }
 
     final response = await http.get(
-      Uri.parse(
-          '$BASE_URL$STUDENT_GET_LECTURES$lectureId'),
+      Uri.parse('$BASE_URL$STUDENT_GET_LECTURES$lectureId'),
       headers: {
-        'token': token,
+        'token': tok != null
+            ? token
+            : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzYzYzQ3NzE0M2EwYjljZDkwOWE4MyIsImlzQWRtaW4iOmZhbHNlLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTcxOTExMzc2Nn0.BPE5iuCUaS1oJp-EK0ayzqnH4a3KF5dg8lJmcL9Zy4U',
       },
     );
 
@@ -419,7 +424,8 @@ class ApiManager {
     }
   }
 
-  static Future<SectionsResponse> fetchSections({required String sectionId}) async {
+  static Future<SectionsResponse> fetchSections(
+      {required String sectionId,String? tok}) async {
     final token = await LoginStatus.getToken();
 
     if (token == null) {
@@ -427,10 +433,9 @@ class ApiManager {
     }
 
     final response = await http.get(
-      Uri.parse(
-          '$BASE_URL$STUDENT_GET_LECTURES$sectionId'),
+      Uri.parse('$BASE_URL$STUDENT_GET_LECTURES$sectionId'),
       headers: {
-        'token': token,
+        'token': tok != null? token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzYzYzQ3NzE0M2EwYjljZDkwOWE4MyIsImlzQWRtaW4iOmZhbHNlLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTcxOTExMzc2Nn0.BPE5iuCUaS1oJp-EK0ayzqnH4a3KF5dg8lJmcL9Zy4U',
       },
     );
 

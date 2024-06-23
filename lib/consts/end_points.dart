@@ -21,7 +21,7 @@ const String STUDENT_SCAN_QR_LECTURE = "/student/scan-qr-code";
 const String STUDENT_VIEW_ALL_SUBJECTS = "/student/subjects/view-all-subjects";
 
 const String STUDENT_GET_LECTURES = "/student/lecture/get-lectures/";
-const String STUDENT_GET_SECTIONS = "/student/section/get-lectures/";
+const String STUDENT_GET_SECTIONS = "/student/section/get-sections/";
 
 
 

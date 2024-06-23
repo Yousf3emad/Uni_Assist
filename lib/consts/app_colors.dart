@@ -10,5 +10,6 @@ class AppColors {
   static const Color darkScaffoldColor = Colors.black;
 
   static Color customGrayColor = Colors.grey[300]!;
+  static Color customDarkGrayColor = Colors.grey[500]!;
 
 }

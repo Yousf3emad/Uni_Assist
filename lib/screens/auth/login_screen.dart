@@ -283,14 +283,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             print(result["profOrProfAssist"]["role"]);
                             print(result["profOrProfAssist"]["subject"]);
 
-                            List<dynamic> dynamicListSubjects = result["profOrProfAssist"]["subject"];
-                            List<String> listSubjects = dynamicListSubjects.map((subject) => subject.toString()).toList();
+                            List<dynamic> dynamicListSubjects =
+                                result["profOrProfAssist"]["subject"];
+                            List<String> listSubjects = dynamicListSubjects
+                                .map((subject) => subject.toString())
+                                .toList();
 
                             print("ListSubjects => $listSubjects");
 
                             LoginStatus.saveLoginStatus(
                               token: result["token"],
                               role: result["profOrProfAssist"]["role"],
+                              name:  result["profOrProfAssist"]["name"],
+                              email: result["profOrProfAssist"]["email"],
                               subjects: listSubjects,
                             ).then((value) {
                               Navigator.pushNamed(
@@ -334,6 +339,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             LoginStatus.saveLoginStatus(
                               token: result["token"],
                               role: result["studentEmail"]["role"],
+                              name: result["studentEmail"]["name"],
+                              email: result["studentEmail"]["email"],
                             ).then((value) {
                               Navigator.pushNamed(
                                 context,

@@ -98,8 +98,16 @@ class _HomeScreenState extends State<HomeScreen> {
         isExtended: true,
         onPressed: () {
           showModalBottomSheet(
+            backgroundColor: Colors.transparent,
             context: context,
             builder: (context) => Container(
+              decoration: BoxDecoration(
+                color: themeProvider.getIsDarkTheme ? Colors.grey[900] : Colors.white,
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(18),
+                  topLeft: Radius.circular(18),
+                ),
+              ),
               padding: const EdgeInsets.all(12.0),
               child: Form(
                 key: _formKey,

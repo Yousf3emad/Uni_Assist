@@ -25,6 +25,7 @@ class _MaterialsLevelStudentViewScreenState
   late List<String> foldersList;
   late List<StudentViewAllSubjectModel> subjectsList = []; // Initialize with empty list
   late String lectureOrSection;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -37,10 +38,13 @@ class _MaterialsLevelStudentViewScreenState
       List<StudentViewAllSubjectModel> fetchedSubjects = await ApiManager.fetchSubjects();
       setState(() {
         subjectsList = fetchedSubjects;
+        isLoading = false; // Stop loading when data is fetched
       });
     } catch (e) {
-      // Handle error
       print('Error fetching subjects: $e');
+      setState(() {
+        isLoading = false; // Stop loading even if there is an error
+      });
     }
   }
 
@@ -72,9 +76,14 @@ class _MaterialsLevelStudentViewScreenState
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) => InkWell(
-              onTap: () {
+              onTap: () async {
                 lectureOrSection = foldersList[index];
 
+                // Ensure subjects are loaded before showing the bottom sheet
+                if (isLoading) {
+                  await fetchSubjects();
+                }
+                isLoading = false;
                 showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   context: context,
@@ -91,66 +100,66 @@ class _MaterialsLevelStudentViewScreenState
                     padding: const EdgeInsets.all(18),
                     child: subjectsList.isEmpty
                         ? SizedBox(
-                            height: size.height * .3,
-                            width: size.width,
-                            child: const Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.drawerColor,
+                      height: size.height * .3,
+                      width: size.width,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.drawerColor,
+                        ),
+                      ),
+                    )
+                        : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          titleTextWidget(
+                            txt: "Subject ?",
+                            color: Colors.amberAccent,
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, subjIndex) => Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(size.height * .8,
+                                      kBottomNavigationBarHeight - 20),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 32.0,
+                                  ),
+                                  backgroundColor: AppColors.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(20.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(
+                                    context,
+                                    PdfsScreenStudentView.routeName,
+                                    arguments: [
+                                      lectureOrSection,
+                                      subjectsList[subjIndex].id,
+                                      subjectsList[subjIndex].title,
+                                    ],
+                                  );
+                                },
+                                child: subTitleTextWidget(
+                                    txt: subjectsList[subjIndex].title),
                               ),
                             ),
-                          )
-                        : SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                titleTextWidget(
-                                  txt: "Subject ?",
-                                  color: Colors.amberAccent,
-                                ),
-                                const SizedBox(
-                                  height: 24,
-                                ),
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, subjIndex) => Center(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        fixedSize: Size(size.height * .8,
-                                            kBottomNavigationBarHeight - 20),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 32.0,
-                                        ),
-                                        backgroundColor: AppColors.primaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.pushNamed(
-                                          context,
-                                          PdfsScreenStudentView.routeName,
-                                          arguments: [
-                                            lectureOrSection,
-                                            subjectsList[subjIndex].id,
-                                            subjectsList[subjIndex].title,
-                                          ],
-                                        );
-                                      },
-                                      child: subTitleTextWidget(
-                                          txt: subjectsList[subjIndex].title),
-                                    ),
-                                  ),
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    height: 12.0,
-                                  ),
-                                  itemCount: subjectsList.length,
-                                ),
-                              ],
+                            separatorBuilder: (context, index) =>
+                            const SizedBox(
+                              height: 12.0,
                             ),
+                            itemCount: subjectsList.length,
                           ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },

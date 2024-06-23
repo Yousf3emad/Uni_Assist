@@ -140,121 +140,126 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     Size size = MediaQuery.of(context).size;
-
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _isGenerate
-              ? (_qrImage != null
-                  ? Image.memory(_qrImage!)
-                  : SizedBox(
-                      height: size.height * .485,
-                      width: size.height * .4,
-                      child: const Center(
-                          child: CircularProgressIndicator(
-                        color: AppColors.drawerColor,
-                      ))))
-              : Image.asset(
-                  AssetsManager.qrCode,
-                  width: size.height * .2,
-                  color: themeProvider.getIsDarkTheme
-                      ? AppColors.drawerColor
-                      : null,
-                ),
-          const SizedBox(
-            height: 24.0,
-          ),
-          SizedBox(
-            width: 250,
-            height: kBottomNavigationBarHeight - 10,
-            child: _isGenerate
-                ? ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: themeProvider.getIsDarkTheme
-                              ? AppColors.drawerColor
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18.0,
-                        vertical: 6,
-                      ),
-                      backgroundColor: Colors.red,
-                    ),
-                    onPressed: () async {
-                      await _shutdownPythonServer();
-                      _timer?.cancel();
-                      setState(() {
-                        _isGenerate = false;
-                        _selectedSubject = null;
-                        _selectedLectureOrSection = null;
-                        _isSection = false;
-                        _isLecture = false;
-                        selectedIndex = null;
-                      });
-                    },
-                    child: titleTextWidget(
-                      txt: "Cancel",
-                    ),
-                  )
-                : ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: themeProvider.getIsDarkTheme
-                              ? AppColors.drawerColor
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18.0,
-                        vertical: 6,
-                      ),
-                      backgroundColor: themeProvider.getIsDarkTheme
-                          ? AppColors.darkScaffoldColor
-                          : AppColors.primaryColor,
-                    ),
-                    onPressed: () async {
-                      int? weekNum = await LoginStatus.getWeekNum();
-                      if (weekNum == 0) {
-                        MyAppMethods.showErrorORWarningDialog(
-                            context: context,
-                            subTitle: ALLERT_MESSAGE_ATTENDANCE,
-                            isError: false,
-                            fctConfirmation: () {
-                              LoginStatus.saveWeekNum(weekNum: weekNum! + 1);
-                              _showSubjectDialog();
-                            },
-                            fctCancel: () {
-                              Navigator.pop(context);
-                            });
-                      } else {
-                        bool notInSameWeek = await isNotInSameWeek();
-                        print(notInSameWeek);
-                        if (notInSameWeek) {
-                          LoginStatus.saveWeekNum(weekNum: weekNum! + 1);
-                          _showSubjectDialog();
-                        } else {
-                          _showSubjectDialog();
-                        }
-                      }
-                      if (weekNum! > 8) {
-                        LoginStatus.saveWeekNum(weekNum: 0);
-                      }
-                      print(weekNum);
-                      _showSubjectDialog();
-                     },
-                    child: titleTextWidget(txt: "Generate Qr Code"),
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _isGenerate
+                ? (_qrImage != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(18.0),
+                        child: Image.memory(_qrImage!),
+                      )
+                    : SizedBox(
+                        height: size.height * .485,
+                        width: size.height * .4,
+                        child: const Center(
+                            child: CircularProgressIndicator(
+                          color: AppColors.drawerColor,
+                        ))))
+                : Image.asset(
+                    AssetsManager.qrCode,
+                    width: size.height * .2,
+                    color: themeProvider.getIsDarkTheme
+                        ? AppColors.drawerColor
+                        : null,
                   ),
-          ),
-        ],
+            const SizedBox(
+              height: 24.0,
+            ),
+            SizedBox(
+              width: 250,
+              height: kBottomNavigationBarHeight - 10,
+              child: _isGenerate
+                  ? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: themeProvider.getIsDarkTheme
+                                ? AppColors.drawerColor
+                                : Colors.transparent,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0,
+                          vertical: 6,
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                      onPressed: () async {
+                        await _shutdownPythonServer();
+                        _timer?.cancel();
+                        setState(() {
+                          _isGenerate = false;
+                          _selectedSubject = null;
+                          _selectedLectureOrSection = null;
+                          _isSection = false;
+                          _isLecture = false;
+                          selectedIndex = null;
+                        });
+                      },
+                      child: titleTextWidget(
+                        txt: "Cancel",
+                      ),
+                    )
+                  : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: themeProvider.getIsDarkTheme
+                                ? AppColors.drawerColor
+                                : Colors.transparent,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0,
+                          vertical: 6,
+                        ),
+                        backgroundColor: themeProvider.getIsDarkTheme
+                            ? AppColors.darkScaffoldColor
+                            : AppColors.primaryColor,
+                      ),
+                      onPressed: () async {
+                        int? weekNum = await LoginStatus.getWeekNum();
+                        if (weekNum == 0) {
+                          MyAppMethods.showErrorORWarningDialog(
+                              context: context,
+                              subTitle: ALLERT_MESSAGE_ATTENDANCE,
+                              isError: false,
+                              fctConfirmation: () {
+                                LoginStatus.saveWeekNum(weekNum: weekNum! + 1);
+                                _showSubjectDialog();
+                              },
+                              fctCancel: () {
+                                Navigator.pop(context);
+                              });
+                        } else {
+                          bool notInSameWeek = await isNotInSameWeek();
+                          print(notInSameWeek);
+                          if (notInSameWeek) {
+                            LoginStatus.saveWeekNum(weekNum: weekNum! + 1);
+                            _showSubjectDialog();
+                          } else {
+                            _showSubjectDialog();
+                          }
+                        }
+                        if (weekNum! > 8) {
+                          LoginStatus.saveWeekNum(weekNum: 0);
+                        }
+                        print(weekNum);
+                        _showSubjectDialog();
+                      },
+                      child: titleTextWidget(txt: "Generate Qr Code"),
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -262,9 +267,11 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   void _showSubjectDialog() async {
     List<String> subjectsList = await LoginStatus.getSubjects();
     //print(subjectsList[])
+
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (BuildContext context) {
+        final themeProvider = Provider.of<ThemeProvider>(context);
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
@@ -286,8 +293,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                             ? "choose a subject!!"
                             : "choose lecture Or Section!!",
                         confirmTxt: 'Ok',
-                        fctConfirmation: () {
-                        },
+                        fctConfirmation: () {},
                         fctCancel: () {
                           Navigator.pop(context);
                         },
@@ -297,7 +303,6 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                         'selectedSubject': _selectedSubject,
                         'selectedLectureOrSection': _selectedLectureOrSection,
                         'isGenerate': true,
-
                       });
                       Navigator.pop(context);
                     }
@@ -331,7 +336,9 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                       decoration: BoxDecoration(
-                        color: AppColors.customGrayColor,
+                        color: themeProvider.getIsDarkTheme
+                            ? Colors.grey[600]
+                            : AppColors.customGrayColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       height: subjectsList.length > 3 ? 250 : 150,
@@ -351,6 +358,9 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                             ),
                             child: ListTile(
                               title: titleTextWidget(
+                                color: themeProvider.getIsDarkTheme
+                                    ? Colors.black
+                                    : null,
                                 txt: subject,
                               ),
                               onTap: () {
@@ -389,13 +399,19 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                             });
                           },
                           child: titleTextWidget(
-                            color: _isLecture ? Colors.white : null,
+                            color: themeProvider.getIsDarkTheme
+                                ? Colors.black
+                                : _isLecture
+                                    ? Colors.white
+                                    : null,
                             txt: 'Lecture',
                           ),
                           btnWidth: 120,
                           btnColor: _isLecture
                               ? AppColors.drawerColor
-                              : AppColors.customGrayColor,
+                              : themeProvider.getIsDarkTheme
+                                  ? AppColors.customDarkGrayColor
+                                  : AppColors.customGrayColor,
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * .05,
@@ -409,13 +425,19 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                             });
                           },
                           child: titleTextWidget(
-                            color: _isSection ? Colors.white : null,
+                            color: themeProvider.getIsDarkTheme
+                                ? Colors.black
+                                : _isSection
+                                    ? Colors.white
+                                    : null,
                             txt: "Section",
                           ),
                           btnWidth: 120,
                           btnColor: _isSection
                               ? AppColors.drawerColor
-                              : AppColors.customGrayColor,
+                              : themeProvider.getIsDarkTheme
+                                  ? AppColors.customDarkGrayColor
+                                  : AppColors.customGrayColor,
                         ),
                       ],
                     )
@@ -429,7 +451,6 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
     );
 
     if (result != null && result['isGenerate'] == true) {
-
       int? weekNum = await LoginStatus.getWeekNum();
       await _setQrData({
         'type': result['selectedLectureOrSection'],
