@@ -7,7 +7,9 @@ class MyAppMethods {
   static Future<void> showErrorORWarningDialog({
     required BuildContext context,
     required String subTitle,
-    required Function fct,
+    String confirmTxt = 'Yes',
+    required Function fctConfirmation,
+    required Function fctCancel,
     bool isError = true,
   }) async {
     await showDialog(
@@ -43,7 +45,7 @@ class MyAppMethods {
                         visible: !isError,
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            fctCancel();
                           },
                           child: subTitleTextWidget(
                             txt: 'Cancel',
@@ -59,13 +61,13 @@ class MyAppMethods {
                         onPressed: () {
                           try{
                             Navigator.pop(context);
-                            fct();
+                            fctConfirmation();
                           }catch(e){
                             print(e.toString());
                           }
                         },
                         child: subTitleTextWidget(
-                          txt: 'Yes',
+                          txt: confirmTxt,
                           color: Colors.red,
                         ),
                       ),

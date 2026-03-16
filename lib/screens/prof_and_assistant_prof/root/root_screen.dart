@@ -28,7 +28,7 @@ class _RootScreenState extends State<RootScreen> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const GenerateQrCodeScreen(),
-    AttendanceScreen(),
+    const AttendanceScreen(),
      const MaterialsScreen(),
   ];
   final List<String> titles = [

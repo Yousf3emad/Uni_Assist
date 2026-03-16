@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_assest/consts/app_colors.dart';
 import 'package:uni_assest/providers/theme_provider.dart';
+import 'package:uni_assest/screens/auth/login_screen.dart';
+import 'package:uni_assest/shared/local/cashe/login_status.dart';
 import '../../services/assets_manager.dart';
 import '../../services/my_app_methods.dart';
 import '../custom_list_tile_widget.dart';
@@ -16,6 +18,26 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+  late Future<String?> name;
+  late Future<String?> email;
+
+  @override
+  void initState() {
+    super.initState();
+    name = getName();
+    email = getEmail();
+  }
+
+  Future<String?> getName() async {
+    final prefs = await LoginStatus.getName();
+    return prefs;
+  }
+
+  Future<String?> getEmail() async {
+    final prefs = await LoginStatus.getEmail();
+    return prefs;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -64,14 +86,48 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            titleTextWidget(
-                                txt: "Youssef Emad", color: Colors.white),
-                            const SizedBox(
-                              height: 6.0,
+                            FutureBuilder<String?>(
+                              future: name,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return Text('No name found');
+                                }
+                                return subTitleTextWidget(
+                                  txt: snapshot.data!,
+                                  color: Colors.white,
+                                  isOverflow: true,
+                                  overFlow: TextOverflow.ellipsis,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                );
+                              },
                             ),
-                            subTitleTextWidget(
-                                txt: "youssef20024@fci.bu.edu.eg",
-                                color: Colors.white70),
+                            const SizedBox(height: 6.0),
+                            FutureBuilder<String?>(
+                              future: email,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data == null) {
+                                  return Text('No email found');
+                                }
+
+                                return subTitleTextWidget(
+                                  txt: snapshot.data!,
+                                  color: Colors.white70,
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ],
@@ -164,8 +220,18 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       //Warning when the user want to log out
                       MyAppMethods.showErrorORWarningDialog(
                         context: context,
-                        fct: () {
+                        fctConfirmation: () {
+                          LoginStatus.logout();
                           Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
+                            (Route<dynamic> route) =>
+                                false, // Removes all previous routes
+                          );
+                        },
+                        fctCancel: () {
                           Navigator.pop(context);
                         },
                         isError: false,
