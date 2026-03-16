@@ -8,12 +8,10 @@ class Styles {
     required BuildContext context,
   }) =>
       ThemeData(
+        useMaterial3: false,
         scaffoldBackgroundColor: isDarkTheme
             ? AppColors.darkScaffoldColor
             : AppColors.lightScaffoldColor,
-        // cardColor: isDarkTheme
-        //     ? const Color.fromARGB(255, 13, 6, 37)
-        //     : AppColors.lightCardColor,
         brightness: isDarkTheme ? Brightness.dark : Brightness.light,
         appBarTheme: AppBarTheme(
           iconTheme:

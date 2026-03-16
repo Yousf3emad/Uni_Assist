@@ -5,6 +5,7 @@ class ThemeProvider with ChangeNotifier {
   // ignore: constant_identifier_names
   static const THEME_STATUS = "THEME_STATUS";
   bool _darkTheme = false;
+
   bool get getIsDarkTheme => _darkTheme;
 
   ThemeProvider() {
@@ -26,6 +27,7 @@ class ThemeProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _darkTheme = prefs.getBool(THEME_STATUS) ??
         false; //if return value == nul set is by false
+    notifyListeners();
     return _darkTheme;
   }
 }

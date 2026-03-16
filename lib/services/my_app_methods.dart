@@ -57,11 +57,15 @@ class MyAppMethods {
                         ),
                       TextButton(
                         onPressed: () {
-                          fct();
-                          Navigator.pop(context);
+                          try{
+                            Navigator.pop(context);
+                            fct();
+                          }catch(e){
+                            print(e.toString());
+                          }
                         },
                         child: subTitleTextWidget(
-                          txt: 'Ok',
+                          txt: 'Yes',
                           color: Colors.red,
                         ),
                       ),

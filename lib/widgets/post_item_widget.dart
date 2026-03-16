@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uni_assest/consts/app_colors.dart';
 import 'package:uni_assest/widgets/title_text_widget.dart';
 
 import 'post_interaction_btn.dart';
@@ -40,22 +41,9 @@ class PostItem extends StatelessWidget {
               fontSize: 22.0
           ),),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: Row(
-            children: [
-              Text('100'), SizedBox(width: 8,),
-              Spacer(),
-              Text("100 Comments"),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12.0,),
-        Container(height: 0.5,color: Colors.grey,),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0,),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               postInteractionBtn(
                 context: context,
@@ -64,6 +52,8 @@ class PostItem extends StatelessWidget {
                 icon: Icons.favorite_border_outlined,
                 iconColor: Colors.redAccent
               ),
+              const Text('100'),
+              const Spacer(),
               postInteractionBtn(
                 context: context,
                 txt: "Comment",
@@ -71,9 +61,12 @@ class PostItem extends StatelessWidget {
                 iconColor: Colors.grey,
                 txtColor: Colors.grey
               ),
+              const Text("100"),
+              const SizedBox(width: 12,)
+
             ],),
         ),
-        Container(height: 0.5,color: Colors.grey,),
+        Container(height: 0.5,color: AppColors.customGrayColor,),
 
       ],
     );

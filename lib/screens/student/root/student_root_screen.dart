@@ -1,47 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:uni_assest/screens/attendance_screen.dart';
-import 'package:uni_assest/screens/schedule_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:uni_assest/providers/theme_provider.dart';
+import 'package:uni_assest/screens/student/student_attendance_screen.dart';
+import 'package:uni_assest/screens/student/student_materials_screen.dart';
 import 'package:uni_assest/services/assets_manager.dart';
 import 'package:uni_assest/widgets/bottom_navigation_bar_item_widget.dart';
 import 'package:uni_assest/widgets/drawer/drawer.dart';
-import 'consts/app_colors.dart';
-import 'screens/home_screen.dart';
-import 'screens/scan_screen.dart';
 
-class RootScreen extends StatefulWidget {
-  const RootScreen({super.key});
+import '../../../consts/app_colors.dart';
+import '../student_home_screen.dart';
+import '../student_scan_screen.dart';
+
+
+class StudentRootScreen extends StatefulWidget {
+  const StudentRootScreen({super.key});
+
   @override
-  State<RootScreen> createState() => _RootScreenState();
+  State<StudentRootScreen> createState() => _StudentRootScreenState();
 
-  static const String routeName = "RootScreen";
+  static const String routeName = "StudentRootScreen";
 }
 
-class _RootScreenState extends State<RootScreen> {
-  late final PageController _controller;
+class _StudentRootScreenState extends State<StudentRootScreen> {
+  //late final PageController _controller;
   int _currentScreen = 0;
   final List<Widget> _screens = [
-    const HomeScreen(),
-    const ScanScreen(),
-    AttendanceScreen(),
-    const ScheduleScreen(),
+    const StudentHomeScreen(),
+    const StudentScanScreen(),
+    StudentAttendanceScreen(),
+    const StudentMaterialsScreen(),
   ];
   final List<String> titles = [
     "Home",
     "Scan",
     "Attendance",
-    "Schedule",
+    "Material",
   ];
+
   @override
   void initState() {
     super.initState();
-    _controller = PageController(initialPage: _currentScreen);
   }
+
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.customGrayColor,
         title: Text(
           titles[_currentScreen],
           style: const TextStyle(
@@ -57,21 +63,10 @@ class _RootScreenState extends State<RootScreen> {
           )
         ],
       ),
-      body: PageView(
-        allowImplicitScrolling: true,
-        onPageChanged: (index) {
-          setState(() {
-            _currentScreen = index;
-          });
-        },
-        physics: const BouncingScrollPhysics(),
-        controller: _controller,
-        children: _screens,
-      ),
+      body: _screens[_currentScreen],
       bottomNavigationBar: NavigationBar(
-        indicatorColor: Colors.white,
-        //backgroundColor: const Color.fromARGB(255, 21, 119, 86),
-        backgroundColor: AppColors.primaryColor,
+        indicatorColor: themeProvider.getIsDarkTheme? Colors.grey[800] : Colors.white,
+        backgroundColor: themeProvider.getIsDarkTheme? AppColors.darkScaffoldColor : AppColors.primaryColor,
         destinations: [
           bottomNavigationBarItem(
             icon: IconlyLight.home,
@@ -83,29 +78,23 @@ class _RootScreenState extends State<RootScreen> {
             selectedIcon: IconlyBold.scan,
             label: "Scan",
           ),
-          // bottomNavigationBarItem(
-          //   icon: IconlyLight.profile,
-          //   selectedIcon: IconlyBold.profile,
-          //   label: "Profile",
-          // ),
           bottomNavigationBarItem(
             icon: IconlyLight.paper,
             selectedIcon: IconlyBold.paper,
             label: "Attendance",
           ),
           bottomNavigationBarItem(
-            icon: IconlyLight.timeCircle,
-            selectedIcon: IconlyBold.timeCircle,
-            label: "Schedule",
+            icon: IconlyLight.folder,
+            selectedIcon: IconlyBold.folder,
+            label: "Material",
           ),
         ],
-        height: kBottomNavigationBarHeight,
+        height: kBottomNavigationBarHeight + 6,
         selectedIndex: _currentScreen,
         onDestinationSelected: (index) {
           setState(() {
             _currentScreen = index;
           });
-          _controller.jumpToPage(_currentScreen);
         },
       ),
       drawer: const DrawerWidget(),

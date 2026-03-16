@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:uni_assest/widgets/sub_title_text_widget.dart';
 
-import '../widgets/post_item_widget.dart';
+import '../../providers/theme_provider.dart';
+import '../../widgets/post_item_widget.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class StudentHomeScreen extends StatelessWidget {
+  const StudentHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
