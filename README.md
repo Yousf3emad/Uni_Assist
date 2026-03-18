@@ -2,6 +2,52 @@
   UniAssist is a comprehensive Flutter-based mobile solution designed to bridge the gap between instructors (doctors/TAs) and students. It streamlines classroom  
   administration, automated attendance, and material distribution into one unified, modern interface.
 
+<img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/mockup.png" width="400" height="300">
+
+<details>
+  <summary>📸 Click to see UI Screenshots</summary>
+  
+# Light UI
+<table>
+  <tr>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/login.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/home.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/scan_qr.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/attendance_lectuers.jpg" width="300"></td>
+
+  </tr>
+  <tr>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/Material.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/subjects_dialog.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/pdfs_screen.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/light/logout_alarm.jpg" width="300"></td>
+
+  </tr>
+  </table>
+
+  # Dark UI
+  <table>
+  <tr>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/login.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/home.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/scan_qr.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/attendance_lectuers.jpg" width="300"></td>
+
+  </tr>
+  <tr>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/Material.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/subjects_dialog.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/pdfs_screen.jpg" width="300"></td>
+    <td><img src="https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/dark/logout_alarm.jpg" width="300"></td>
+
+  </tr>
+  </table>
+
+  # Follow the link below to see all the screenshots
+  link -> https://github.com/Yousf3emad/Uni_Assist/blob/master/screenshots/mockup.png
+  
+  </details>
+
 ########################################
 
 # 🚀 Key Features
